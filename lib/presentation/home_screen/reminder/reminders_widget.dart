@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:planner/presentation/common_widgets/app_list.dart';
 import 'package:planner/presentation/home_screen/models/reminder_model.dart';
 import 'package:planner/presentation/home_screen/reminder/reminder_tile_widget.dart';
+import 'package:provider/provider.dart';
 
 class TodayRemindersWidget extends StatelessWidget {
   const TodayRemindersWidget({
     super.key,
-    required this.reminderListModel,
   });
-
-  final ReminderListModel reminderListModel;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +24,8 @@ class TodayRemindersWidget extends StatelessWidget {
           ),
         ),
         AppListWidget(
-            children: reminderListModel.reminders
+            children: Provider.of<ReminderListModel>(context)
+                .reminders
                 .map<ReminderTileWidget>((e) => ReminderTileWidget(
                       reminder: e,
                     ))

@@ -17,7 +17,7 @@ class ReminderTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var folder = Provider.of<FolderListModel>(context)
+    var folder = Provider.of<FolderListModel>(context, listen: false)
         .folders
         .getById(reminder.folderId);
     return Slidable(
@@ -32,11 +32,13 @@ class ReminderTileWidget extends StatelessWidget {
           ],
         ),
         child: TileWidget(
-          icon: folder!.icon,
+          icon: folder!.getIcon(),
           background: folder.background,
           title: reminder.title,
           trailing: buildTimer(),
-          withDivider: Provider.of<ReminderListModel>(context).reminders.last !=
+          withDivider: Provider.of<ReminderListModel>(context, listen: false)
+                  .reminders
+                  .last !=
               reminder,
           onPressed: () {},
         ));
@@ -53,6 +55,7 @@ class ReminderTileWidget extends StatelessWidget {
         children: [
           const Icon(
             CupertinoIcons.timer,
+            color: CupertinoColors.black,
             size: 14,
           ),
           const SizedBox(width: 3),

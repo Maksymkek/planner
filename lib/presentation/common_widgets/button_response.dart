@@ -5,6 +5,7 @@ class ButtonResponseWidget extends StatefulWidget {
       {super.key, required this.onPressed, required this.child});
 
   final VoidCallback onPressed;
+
   final Widget child;
 
   @override

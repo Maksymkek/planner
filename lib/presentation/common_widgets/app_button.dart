@@ -9,7 +9,7 @@ class AppButtonWidget extends StatefulWidget {
     required this.onPressed,
     this.iconSize = 22.0,
     this.color = AppColors.buttonBlue,
-    this.textSize = 18.0,
+    this.textSize = 16.0,
     this.spacer = 5.0,
     this.textStyle,
   }) : assert(text != null || icon != null);
@@ -66,7 +66,7 @@ class _AppButtonWidgetState extends State<AppButtonWidget>
           TextStyle(
             fontSize: widget.textSize,
             color: colorAnimation.value,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w400,
           ),
     );
     return widget.icon != null

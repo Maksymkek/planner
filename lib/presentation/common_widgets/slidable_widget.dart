@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
 class SlidableActionWidget extends StatefulWidget {
-  const SlidableActionWidget({
-    super.key,
-    required this.icon,
-    required this.color,
-    required this.onPressed,
-  });
+  const SlidableActionWidget(
+      {super.key,
+      required this.icon,
+      required this.color,
+      required this.onPressed,
+      this.iconSize = 22});
 
   final Color color;
   final IconData icon;
+  final double iconSize;
   final VoidCallback onPressed;
 
   @override
@@ -46,7 +47,7 @@ class _SlidableActionWidgetState extends State<SlidableActionWidget>
                   alignment: Alignment.center,
                   child: Icon(
                     widget.icon,
-                    size: 22,
+                    size: widget.iconSize,
                     color: Colors.white,
                   ),
                 ),

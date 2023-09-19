@@ -5,6 +5,7 @@ import 'package:planner/domain/entity/folder/folder.dart';
 import 'package:planner/presentation/common_widgets/slidable_widget.dart';
 import 'package:planner/presentation/common_widgets/tile_widget.dart';
 import 'package:planner/presentation/home_screen/models/folder_model.dart';
+import 'package:planner/presentation/router.dart';
 import 'package:provider/provider.dart';
 
 class FolderTileWidget extends StatelessWidget {
@@ -22,7 +23,10 @@ class FolderTileWidget extends StatelessWidget {
           SlidableActionWidget(
               icon: CupertinoIcons.delete,
               color: AppColors.carmineRed,
-              onPressed: () {})
+              onPressed: () {
+                Provider.of<FolderListModel>(context, listen: false)
+                    .onDeleteFolderClick(folder);
+              })
         ],
       ),
       child: TileWidget(
@@ -32,10 +36,13 @@ class FolderTileWidget extends StatelessWidget {
         background: folder.background,
         trailing: const Icon(
           CupertinoIcons.chevron_right,
+          color: CupertinoColors.black,
           size: 18,
         ),
-        icon: folder.icon,
-        onPressed: () {},
+        icon: folder.getIcon(),
+        onPressed: () {
+          Navigator.of(context).pushNamed(Routes.folderPage, arguments: folder);
+        },
       ),
     );
   }

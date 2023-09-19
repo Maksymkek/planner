@@ -9,41 +9,25 @@ final class MockLocalFolderRepository extends Repository<Folder> {
         id: 'list',
         title: 'Quick Reminders',
         background: AppColors.darkBlue,
-        icon: const Icon(
-          CupertinoIcons.list_bullet,
-          color: CupertinoColors.white,
-          size: 25,
-        ),
+        icon: CupertinoIcons.list_bullet,
         unchanged: true),
     Folder(
         id: 'gift',
         title: 'Holidays',
         background: AppColors.carmineRed,
-        icon: const Icon(
-          CupertinoIcons.gift_fill,
-          color: CupertinoColors.white,
-          size: 25,
-        ),
+        icon: CupertinoIcons.gift_fill,
         unchanged: true),
     Folder(
         id: 'meet',
         title: 'Meetings',
         background: AppColors.lightBlue,
-        icon: const Icon(
-          CupertinoIcons.person_2_fill,
-          color: CupertinoColors.white,
-          size: 25,
-        ),
+        icon: CupertinoIcons.person_2_fill,
         unchanged: true),
     Folder(
         id: 'lamp',
         title: 'Utilities',
         background: AppColors.yellow,
-        icon: const Icon(
-          CupertinoIcons.lightbulb_fill,
-          color: CupertinoColors.white,
-          size: 25,
-        ),
+        icon: CupertinoIcons.lightbulb_fill,
         unchanged: false),
   ];
 
