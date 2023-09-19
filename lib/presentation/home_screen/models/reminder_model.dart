@@ -12,4 +12,16 @@ class ReminderListModel extends ChangeNotifier {
     reminders = await repository.getItems();
     notifyListeners();
   }
+
+  Future<void> onAddReminderClick(Reminder reminder) async {
+    await repository.createItem(reminder);
+    reminders.add(reminder);
+    notifyListeners();
+  }
+
+  Future<void> onDeleteReminderClick(Reminder reminder) async {
+    await repository.deleteItem(reminder);
+    reminders.remove(reminder);
+    notifyListeners();
+  }
 }

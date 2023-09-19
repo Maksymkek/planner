@@ -12,4 +12,17 @@ class FolderListModel extends ChangeNotifier {
     folders = await repository.getItems();
     notifyListeners();
   }
+
+  Future<void> onAddFolderClick(Folder folder) async {
+    await repository.createItem(folder);
+    folders.add(folder);
+    notifyListeners();
+  }
+
+  Future<void> onDeleteFolderClick(Folder folder) async {
+    await repository.deleteItem(folder);
+    // folder.reminders?.forEach((element) {});
+    folders.remove(folder);
+    notifyListeners();
+  }
 }

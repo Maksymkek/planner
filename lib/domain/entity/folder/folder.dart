@@ -14,14 +14,16 @@ class Folder {
   final String title;
   final bool unchanged;
   final Color background;
-  final Icon icon;
+  final IconData icon;
   final List<ReminderLink>? reminders;
+
+  Icon getIcon() => Icon(icon, size: 25, color: Colors.white);
 
   Folder copyWith(
       {String? id,
       String? title,
       Color? background,
-      Icon? icon,
+      IconData? icon,
       bool? unchanged,
       List<ReminderLink>? reminders}) {
     return Folder(
