@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:planner/domain/entity/entity.dart';
 import 'package:planner/domain/entity/folder/reminder_link.dart';
 
-class Folder {
+class Folder extends Entity {
   Folder(
-      {required this.id,
+      {required super.id,
       required this.title,
       required this.background,
       required this.icon,
       this.unchanged = false,
-      this.reminders});
+      required this.reminders});
 
-  final String id;
   final String title;
   final bool unchanged;
   final Color background;
   final IconData icon;
-  final List<ReminderLink>? reminders;
+  List<ReminderLink> reminders;
 
   Icon getIcon() => Icon(icon, size: 25, color: Colors.white);
 

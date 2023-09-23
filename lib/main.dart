@@ -1,7 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:planner/data/adapters/registration.dart';
 import 'package:planner/presentation/router.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  WidgetsFlutterBinding.ensureInitialized();
+  registerAppAdapters();
   runApp(const MyApp());
 }
 

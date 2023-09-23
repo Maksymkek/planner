@@ -1,15 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:planner/presentation/common_widgets/app_list.dart';
-import 'package:planner/presentation/home_screen/models/reminder_model.dart';
+import 'package:planner/presentation/home_screen/models/reminder_list_model.dart';
 import 'package:planner/presentation/home_screen/reminder/reminder_tile_widget.dart';
 import 'package:provider/provider.dart';
 
-class TodayRemindersWidget extends StatelessWidget {
+class TodayRemindersWidget extends StatefulWidget {
   const TodayRemindersWidget({
     super.key,
   });
 
+  static final GlobalKey<_TodayRemindersWidgetState> todayRemindersKey =
+      GlobalKey();
+
+  @override
+  State<TodayRemindersWidget> createState() => _TodayRemindersWidgetState();
+}
+
+class _TodayRemindersWidgetState extends State<TodayRemindersWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(

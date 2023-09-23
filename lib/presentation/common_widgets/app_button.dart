@@ -61,7 +61,7 @@ class _AppButtonWidgetState extends State<AppButtonWidget>
     final text = Text(
       widget.text ?? '',
       maxLines: 1,
-      textAlign: TextAlign.center,
+      textAlign: TextAlign.left,
       style: widget.textStyle?.copyWith(color: colorAnimation.value) ??
           TextStyle(
             fontSize: widget.textSize,

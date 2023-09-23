@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planner/presentation/common_widgets/app_list.dart';
 import 'package:planner/presentation/home_screen/folder/folder_tile_widget.dart';
-import 'package:planner/presentation/home_screen/models/folder_model.dart';
+import 'package:planner/presentation/home_screen/models/folder_list_model.dart';
 import 'package:provider/provider.dart';
 
 class FoldersWidget extends StatelessWidget {

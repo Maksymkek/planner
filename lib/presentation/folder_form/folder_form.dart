@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:planner/app_colors.dart';
 import 'package:planner/domain/entity/folder/folder.dart';
-import 'package:planner/presentation/common_widgets/app_button.dart';
-import 'package:planner/presentation/router.dart';
-import 'package:uuid/uuid.dart';
+import 'package:planner/presentation/folder_form/folder_form_model.dart';
+import 'package:planner/presentation/folder_form/icon_picker/folder_form_buttons.dart';
+import 'package:planner/presentation/folder_form/icon_picker/icon_picker_list.dart';
+import 'package:provider/provider.dart';
 
 class FolderFormWidget extends StatefulWidget {
   const FolderFormWidget({required super.key});
@@ -22,12 +22,15 @@ class _FolderFormWidgetState extends State<FolderFormWidget>
   late final Animation<double> _animation;
   late Future<void> Function(Folder) onDone;
   bool _offstage = true;
+  FolderFormModel? _model = FolderFormModel();
 
+//TODO for edit folder
   void show({Folder? folder, required Future<void> Function(Folder) onDone}) {
     if (folder == null) {
       this.onDone = onDone;
       _offstage = false;
-      _textController.text = folder?.title ?? '';
+      _textController.text = '';
+      _model = FolderFormModel();
       _controller.forward();
       setState(() {});
     }
@@ -45,62 +48,82 @@ class _FolderFormWidgetState extends State<FolderFormWidget>
   Widget build(BuildContext context) {
     return Offstage(
       offstage: _offstage,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: FadeTransition(
-          opacity: _animation,
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.all(20.0),
-              width: 220,
-              decoration: const BoxDecoration(
-                  color: AppColors.lightToggledGrey,
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      'New list name',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+      child: ChangeNotifierProvider(
+        create: (context) {
+          return _model ?? FolderFormModel();
+        },
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: FadeTransition(
+            opacity: _animation,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(20.0),
+                width: MediaQuery.of(context).size.width * 0.8,
+                decoration: const BoxDecoration(
+                    color: CupertinoColors.lightBackgroundGray,
+                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'New list',
+                          style: TextStyle(
+                              fontSize: 26, fontWeight: FontWeight.w500),
+                        ),
+                      ],
                     ),
-                  ),
-                  CupertinoTextField(
-                    controller: _textController,
-                    maxLines: 1,
-                    placeholder: 'Enter name',
-                    placeholderStyle: const TextStyle(
-                        fontSize: 16, color: CupertinoColors.placeholderText),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppButtonWidget(
-                        onPressed: _remove,
-                        text: 'Cancel',
-                      ),
-                      AppButtonWidget(
-                        onPressed: () {
-                          _remove();
-                          var folder = Folder(
-                              id: const Uuid().v1(),
-                              title: _textController.text,
-                              background: AppColors.darkBlue,
-                              icon: CupertinoIcons.folder_fill);
-                          onDone(folder).whenComplete(() => Navigator.pushNamed(
-                              context, Routes.folderPage,
-                              arguments: folder));
-                        },
-                        text: 'Done',
-                      )
-                    ],
-                  )
-                ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Builder(builder: (context) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: Provider.of<FolderFormModel>(context)
+                                      .selectedPicker
+                                      .color,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(8.0))),
+                              child: Icon(
+                                Provider.of<FolderFormModel>(context)
+                                    .selectedPicker
+                                    .icon,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const Expanded(child: IconPickerListWidget()),
+                          ],
+                        );
+                      }),
+                    ),
+                    Builder(builder: (context) {
+                      return CupertinoTextField(
+                        controller: _textController,
+                        maxLines: 1,
+                        placeholder: 'Enter name',
+                        onChanged:
+                            Provider.of<FolderFormModel>(context, listen: false)
+                                .onTextChanged,
+                        placeholderStyle: const TextStyle(
+                            fontSize: 16,
+                            color: CupertinoColors.placeholderText),
+                        decoration: const BoxDecoration(),
+                      );
+                    }),
+                    const SizedBox(height: 10),
+                    FolderFormButtons(onClose: _remove)
+                  ],
+                ),
               ),
             ),
           ),

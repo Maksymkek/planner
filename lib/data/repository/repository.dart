@@ -5,5 +5,9 @@ abstract base class Repository<Item> {
 
   Future<void> updateItem(Item item);
 
-  Future<void> deleteItem(Item item);
+  Future<void> deleteItem(String id);
+
+  Future<Item?> getItem(String id);
+
+  Future<void> close();
 }
