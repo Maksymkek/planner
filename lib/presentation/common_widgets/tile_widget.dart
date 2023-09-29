@@ -104,7 +104,7 @@ class _TileWidgetState extends State<TileWidget>
 
   @override
   void dispose() {
-    super.dispose();
     controller.dispose();
+    super.dispose();
   }
 }

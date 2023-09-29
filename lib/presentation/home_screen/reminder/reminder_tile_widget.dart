@@ -6,8 +6,9 @@ import 'package:planner/domain/entity/reminder/reminder.dart';
 import 'package:planner/extensions/folder_list_extension.dart';
 import 'package:planner/presentation/common_widgets/slidable_widget.dart';
 import 'package:planner/presentation/common_widgets/tile_widget.dart';
-import 'package:planner/presentation/home_screen/models/folder_model.dart';
-import 'package:planner/presentation/home_screen/models/reminder_model.dart';
+import 'package:planner/presentation/home_screen/models/folder_list_model.dart';
+import 'package:planner/presentation/home_screen/models/reminder_list_model.dart';
+import 'package:planner/presentation/router.dart';
 import 'package:provider/provider.dart';
 
 class ReminderTileWidget extends StatelessWidget {
@@ -32,15 +33,17 @@ class ReminderTileWidget extends StatelessWidget {
           ],
         ),
         child: TileWidget(
-          icon: folder!.getIcon(),
-          background: folder.background,
+          icon: folder?.getIcon() ?? const Icon(CupertinoIcons.folder_fill),
+          background: folder?.background ?? CupertinoColors.darkBackgroundGray,
           title: reminder.title,
           trailing: buildTimer(),
           withDivider: Provider.of<ReminderListModel>(context, listen: false)
                   .reminders
                   .last !=
               reminder,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, Routes.folderPage, arguments: folder);
+          },
         ));
   }
 
