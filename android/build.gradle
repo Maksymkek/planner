@@ -1,8 +1,11 @@
 buildscript {
     ext.kotlin_version = '1.7.10'
     repositories {
-        google()
         mavenCentral()
+        google()
+        maven {
+            url = uri("https://repo1.maven.org/maven2/")
+        }
     }
 
     dependencies {
@@ -14,8 +17,11 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
         mavenCentral()
+        google()
+        maven {
+            url = uri("https://repo1.maven.org/maven2/")
+        }
     }
 }
 

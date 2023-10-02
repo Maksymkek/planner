@@ -27,7 +27,10 @@ class ReminderTileWidget extends StatelessWidget {
           extentRatio: 0.2,
           children: [
             SlidableActionWidget(
-                onPressed: () {},
+                onPressed: () {
+                  Provider.of<ReminderListModel>(context, listen: false)
+                      .onUpdateReminderTime(reminder);
+                },
                 icon: CupertinoIcons.checkmark,
                 color: AppColors.yellow),
           ],

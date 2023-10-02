@@ -56,7 +56,7 @@ class _FolderScreenState extends State<FolderScreen> {
                     padding: const EdgeInsets.only(
                       left: 20.0,
                       bottom: 7.0,
-                      top: 5.0,
+                      top: 10.0,
                     ),
                     child: Text(
                       widget.folder.title,

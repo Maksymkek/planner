@@ -56,6 +56,12 @@ class FolderModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> onUpdateReminderClick(Reminder reminder) async {
+    await reminder.updateTimer();
+    await onScreenLoad();
+    DIContainer.appNotification.cancelNotification(reminder.id);
+  }
+
   Future<void> checkDateUpdate(DateTime? nowTime) async {
     final now = nowTime ?? DateTime.now();
     if (now.hour == 0) {

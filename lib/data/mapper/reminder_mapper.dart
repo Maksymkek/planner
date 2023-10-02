@@ -3,13 +3,12 @@ import 'package:planner/domain/entity/reminder/reminder.dart';
 
 abstract final class ReminderMapper {
   static Reminder fromDataModel(ReminderDataModel model) {
-    //TODO contacts convertation
     return Reminder(
         id: model.id,
         folderId: model.folderId,
-        type: model.type,
         time: model.time,
         title: model.title,
+        description: model.description,
         repeat: model.repeat,
         contacts: null,
         action: model.action,
@@ -19,8 +18,8 @@ abstract final class ReminderMapper {
   static ReminderDataModel toDataModel(Reminder reminder) {
     return ReminderDataModel(
         id: reminder.id,
-        type: reminder.type,
         title: reminder.title,
+        description: reminder.description,
         time: reminder.time,
         folderId: reminder.folderId,
         repeat: reminder.repeat,
