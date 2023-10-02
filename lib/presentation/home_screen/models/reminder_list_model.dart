@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:planner/data/repository/reminder_repository_impl.dart';
 import 'package:planner/data/repository/repository.dart';
+import 'package:planner/dependencies/di_container.dart';
 import 'package:planner/domain/entity/reminder/reminder.dart';
 
 class ReminderListModel extends ChangeNotifier {
@@ -18,9 +19,10 @@ class ReminderListModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onDeleteReminder(Reminder reminder) async {
-    await repository.deleteItem(reminder.id);
-    notifyListeners();
+  Future<void> onUpdateReminderTime(Reminder reminder) async {
+    await reminder.updateTimer();
+    await onScreenLoad();
+    DIContainer.appNotification.cancelNotification(reminder.id);
   }
 
   Future<void> checkDateUpdate(DateTime? nowTime) async {

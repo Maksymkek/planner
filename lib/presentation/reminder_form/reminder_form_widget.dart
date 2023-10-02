@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:planner/app_colors.dart';
 import 'package:planner/domain/entity/folder/folder.dart';
 import 'package:planner/domain/entity/reminder/reminder.dart';
-import 'package:planner/domain/entity/reminder/reminder_types.dart';
 import 'package:planner/presentation/common_widgets/app_bar.dart';
 import 'package:planner/presentation/common_widgets/app_button.dart';
 import 'package:planner/presentation/reminder_form/model/reminder_form_model.dart';
@@ -60,12 +59,7 @@ class _ReminderFormWidgetState extends State<ReminderFormWidget> {
     final time = DateTime.now();
     final reminder = widget.reminder ??
         Reminder(
-            id: '-1',
-            folderId: '',
-            type: ReminderType.other,
-            time: time,
-            title: '',
-            startDay: time.day);
+            id: '-1', folderId: '', time: time, title: '', startDay: time.day);
     model = ReminderFormModel(reminder, widget.folder);
     model.onScreenLoad();
   }
@@ -108,7 +102,8 @@ class FormListWidget extends StatelessWidget {
             ),
             TextInputWidget(
               text: 'Description',
-              onChanged: (d) {},
+              onChanged: Provider.of<ReminderFormModel>(context, listen: false)
+                  .onDescriptionChanged,
               borderRadius:
                   const BorderRadius.vertical(bottom: Radius.circular(10.0)),
             ),

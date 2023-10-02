@@ -10,16 +10,16 @@ class Reminder extends Entity {
   Reminder(
       {required super.id,
       required this.folderId,
-      required this.type,
       required this.time,
       required this.title,
+      this.description = '',
       this.repeat = ReminderRepeat.never,
       this.contacts,
       required this.startDay,
       this.action});
 
-  final ReminderType type;
   final String title;
+  final String description;
   DateTime time;
   final int startDay;
   final ReminderRepeat? repeat;
@@ -35,6 +35,7 @@ class Reminder extends Entity {
       DateTime? time,
       List<Contact>? contacts,
       ReminderRepeat? repeat,
+      String? description,
       String? action,
       int? startDay}) {
     return Reminder(
@@ -43,9 +44,9 @@ class Reminder extends Entity {
       time: time ?? this.time,
       contacts: contacts ?? this.contacts,
       action: action ?? this.action,
-      type: type ?? this.type,
       repeat: repeat ?? this.repeat,
       folderId: folderId ?? this.folderId,
+      description: description ?? this.description,
       startDay: startDay ?? this.startDay,
     );
   }

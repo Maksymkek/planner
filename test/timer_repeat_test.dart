@@ -8,7 +8,6 @@ void main() {
       final reminder = Reminder(
           id: '1',
           folderId: '1',
-          type: ReminderType.other,
           time: DateTime(2027, 2, 28, 18),
           title: 'test',
           startDay: 29);
@@ -19,7 +18,6 @@ void main() {
       final reminder = Reminder(
           id: '1',
           folderId: '1',
-          type: ReminderType.other,
           time: DateTime(2023, 12, 21),
           title: 'test',
           startDay: 21);

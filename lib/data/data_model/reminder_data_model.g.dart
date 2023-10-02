@@ -18,14 +18,14 @@ class ReminderDataModelAdapter extends TypeAdapter<ReminderDataModel> {
     };
     return ReminderDataModel(
       id: fields[0] as String,
-      type: fields[1] as ReminderType,
-      title: fields[2] as String,
-      time: fields[3] as DateTime,
-      folderId: fields[4] as String,
-      repeat: fields[7] as ReminderRepeat?,
-      contacts: (fields[5] as List?)?.cast<String>(),
-      action: fields[6] as String?,
-      startDay: fields[8] == null ? 1 : fields[8] as int,
+      title: fields[1] as String,
+      description: fields[8] as String,
+      time: fields[2] as DateTime,
+      folderId: fields[3] as String,
+      repeat: fields[6] as ReminderRepeat?,
+      contacts: (fields[4] as List?)?.cast<String>(),
+      action: fields[5] as String?,
+      startDay: fields[7] == null ? 1 : fields[7] as int,
     );
   }
 
@@ -36,21 +36,21 @@ class ReminderDataModelAdapter extends TypeAdapter<ReminderDataModel> {
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.type)
-      ..writeByte(2)
       ..write(obj.title)
-      ..writeByte(3)
+      ..writeByte(2)
       ..write(obj.time)
-      ..writeByte(4)
+      ..writeByte(3)
       ..write(obj.folderId)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.contacts)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.action)
-      ..writeByte(7)
+      ..writeByte(6)
       ..write(obj.repeat)
+      ..writeByte(7)
+      ..write(obj.startDay)
       ..writeByte(8)
-      ..write(obj.startDay);
+      ..write(obj.description);
   }
 
   @override

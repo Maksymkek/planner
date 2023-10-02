@@ -2,7 +2,6 @@ import 'package:hive/hive.dart';
 import 'package:planner/data/adapters/adapters_typeid.dart';
 import 'package:planner/data/data_model/data_model.dart';
 import 'package:planner/domain/entity/reminder/reminder_replay.dart';
-import 'package:planner/domain/entity/reminder/reminder_types.dart';
 
 part 'reminder_data_model.g.dart';
 
@@ -10,8 +9,8 @@ part 'reminder_data_model.g.dart';
 class ReminderDataModel implements DataModel {
   ReminderDataModel(
       {required this.id,
-      required this.type,
       required this.title,
+      required this.description,
       required this.time,
       required this.folderId,
       required this.repeat,
@@ -23,19 +22,19 @@ class ReminderDataModel implements DataModel {
   @HiveField(0)
   final String id;
   @HiveField(1)
-  final ReminderType type;
-  @HiveField(2)
   final String title;
-  @HiveField(3)
+  @HiveField(2)
   final DateTime time;
-  @HiveField(4)
+  @HiveField(3)
   final String folderId;
-  @HiveField(5)
+  @HiveField(4)
   final List<String>? contacts;
-  @HiveField(6)
+  @HiveField(5)
   final String? action;
-  @HiveField(7)
+  @HiveField(6)
   final ReminderRepeat? repeat;
-  @HiveField(8, defaultValue: 1)
+  @HiveField(7, defaultValue: 1)
   final int startDay;
+  @HiveField(8)
+  final String description;
 }

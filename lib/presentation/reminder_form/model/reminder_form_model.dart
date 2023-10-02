@@ -19,6 +19,7 @@ class ReminderFormModel extends ChangeNotifier {
 
   void onScreenLoad() {
     title = reminder.title;
+    description = reminder.description;
     repeat = reminder.repeat ?? ReminderRepeat.never;
     final now = DateTime.now();
     remindTime = reminder.id != '-1'
@@ -31,7 +32,9 @@ class ReminderFormModel extends ChangeNotifier {
     this.title = title;
   }
 
-  void onDescriptionChanged(String description) {}
+  void onDescriptionChanged(String description) {
+    this.description = description;
+  }
 
   void onDatePicked(DateTime date) {
     remindTime =
@@ -56,6 +59,7 @@ class ReminderFormModel extends ChangeNotifier {
       final newReminder = reminder.copyWith(
           id: reminder.id == '-1' ? const Uuid().v1() : reminder.id,
           title: title,
+          description: description,
           repeat: repeat,
           folderId: reminder.id == '-1' ? folder.id : reminder.folderId,
           time: remindTime);
