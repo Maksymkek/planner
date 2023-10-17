@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:planner/domain/entity/reminder/reminder.dart';
-import 'package:planner/domain/entity/reminder/reminder_replay.dart';
+import 'package:planner/extensions/datetime_extension.dart';
+import 'package:planner/presentation/common_widgets/contact_preview/contact_list_preview.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ReminderContentWidget extends StatelessWidget {
   const ReminderContentWidget({super.key, required this.reminder});
@@ -12,67 +13,90 @@ class ReminderContentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 2.5),
-          Text(
-            reminder.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-          ),
-          reminder.description != ''
-              ? Row(
-                  children: [
-                    const SizedBox(width: 1.5),
-                    Expanded(
-                      child: Text(
-                        reminder.description,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w400),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onDoubleTap: () async {
+          var actionUrl = Uri.parse(reminder.action ?? '');
+          if (await canLaunchUrl(actionUrl)) {
+            try {
+              await launchUrl(actionUrl, mode: LaunchMode.inAppWebView);
+            } catch (_) {}
+          }
+        },
+        child: SizedBox(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 2.5),
+              Text(
+                reminder.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              ),
+              reminder.description != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 1.5),
+                          Expanded(
+                            child: Text(
+                              reminder.description ?? '',
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                        ],
                       ),
+                    )
+                  : const SizedBox(),
+              SizedBox(
+                height: 20,
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 2,
                     ),
+                    Text(
+                      '${DateTimeEx.getDay(reminder)}, ${DateTimeEx.getTime(reminder)}',
+                      maxLines: 1,
+                      style: const TextStyle(color: CupertinoColors.systemGrey),
+                    ),
+                    buildActionedMark(),
+                    buildRightDock(),
+                    const SizedBox(width: 10),
                   ],
-                )
-              : const SizedBox(),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2.0),
-            child: Row(
-              children: [
-                const SizedBox(
-                  width: 2,
                 ),
-                Text(
-                  '${getDay()}, ${getTime()}',
-                  maxLines: 1,
-                  style: const TextStyle(color: CupertinoColors.systemGrey),
-                ),
-                buildRepeatLabel(),
-                const SizedBox(width: 10),
-              ],
-            ),
+              ),
+              const SizedBox(height: 3),
+              const Divider(
+                thickness: 0.5,
+                color: Colors.grey,
+                height: 0,
+              ),
+            ],
           ),
-          const SizedBox(height: 3),
-          const Divider(
-            thickness: 0.5,
-            color: Colors.grey,
-            height: 0,
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Expanded buildRepeatLabel() {
+  Expanded buildRightDock() {
     return Expanded(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.max,
         children: [
+          ContactListPreviewWidget(
+            contacts: reminder.contacts ?? [],
+            size: 18,
+          ),
+          const SizedBox(width: 8),
           const Icon(
             CupertinoIcons.repeat,
             color: CupertinoColors.systemGrey,
@@ -82,7 +106,7 @@ class ReminderContentWidget extends StatelessWidget {
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 150),
             child: Text(
-              getRepeat(),
+              DateTimeEx.getRepeat(reminder),
               maxLines: 1,
               textAlign: TextAlign.end,
               overflow: TextOverflow.ellipsis,
@@ -94,34 +118,12 @@ class ReminderContentWidget extends StatelessWidget {
     );
   }
 
-  String getDay() {
-    final nowDate =
-        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-    final reminderTime =
-        DateTime(reminder.time.year, reminder.time.month, reminder.time.day);
-    final difference = nowDate.difference(reminderTime).inDays;
-    if (difference == 0) {
-      return 'Today';
-    }
-    if (difference == -1) {
-      return 'Tomorrow';
-    }
-    final DateFormat formatter = DateFormat('dd.MM.yyyy');
-    return formatter.format(reminder.time);
-  }
-
-  String getTime() {
-    final DateFormat formatter = DateFormat.Hm();
-    return formatter.format(reminder.time);
-  }
-
-  String getRepeat() {
-    if (reminder.repeat == null) {
-      return '';
-    }
-    if (reminder.repeat != ReminderRepeat.never) {
-      return 'every ${reminder.repeat?.name}';
-    }
-    return 'never';
+  Widget buildActionedMark() {
+    return (reminder.action != null)
+        ? const Padding(
+            padding: EdgeInsets.only(left: 5),
+            child: Icon(CupertinoIcons.link, size: 13),
+          )
+        : const SizedBox();
   }
 }

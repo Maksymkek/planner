@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:planner/app_colors.dart';
 import 'package:planner/domain/entity/reminder/reminder.dart';
 import 'package:planner/presentation/common_widgets/slidable_widget.dart';
 import 'package:planner/presentation/folder_screen/models/folder_model.dart';
 import 'package:planner/presentation/folder_screen/reminder_content_widget.dart';
+import 'package:planner/presentation/reminder_details_screen/reminder_details_screen.dart';
+import 'package:planner/presentation/reminder_form/show_picker.dart';
 import 'package:provider/provider.dart';
 
 class ReminderWidget extends StatefulWidget {
@@ -29,55 +30,56 @@ class _ReminderWidgetState extends State<ReminderWidget>
   Widget build(BuildContext context) {
     return Slidable(
       endActionPane: ActionPane(
-        extentRatio: 0.2,
+        extentRatio: 0.4,
         motion: const DrawerMotion(),
         children: [
-          /*SlidableActionWidget(
-            onPressed: () {},
-            icon: CupertinoIcons.info,
+          SlidableActionWidget(
+            onPressed: () {
+              showModalWindow(
+                  context,
+                  ReminderDetailsScreen(reminder: widget.reminder),
+                  double.infinity);
+            },
+            icon: CupertinoIcons.info_circle_fill,
             iconSize: 26,
             color: AppColors.lightBlue,
-          ),*/
+          ),
           SlidableActionWidget(
             onPressed: () {
               Provider.of<FolderModel>(context, listen: false)
                   .onDeleteReminderClick(widget.reminder);
             },
-            icon: CupertinoIcons.delete,
+            icon: CupertinoIcons.delete_solid,
             iconSize: 26,
-            color: AppColors.carmineRed,
+            color: CupertinoColors.destructiveRed,
           )
         ],
       ),
-      child: ColoredBox(
-        color: Colors.transparent,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, top: 3),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  if (controller.isAnimating) {
-                    controller.reverse();
-                    return;
-                  }
-                  controller
-                      .forward()
-                      .whenComplete(() => controller.reverse())
-                      .whenComplete(() =>
-                          Provider.of<FolderModel>(context, listen: false)
-                              .onUpdateReminderClick(widget.reminder));
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 4.5),
-                  child: buildToggleButton(),
-                ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20, top: 3),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            GestureDetector(
+              onTap: () {
+                if (controller.isAnimating) {
+                  controller.reverse();
+                  return;
+                }
+                controller.forward().whenComplete(() {
+                  controller.reverse();
+                }).whenComplete(() =>
+                    Provider.of<FolderModel>(context, listen: false)
+                        .onUpdateReminderClick(widget.reminder));
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 4.5),
+                child: buildToggleButton(),
               ),
-              const SizedBox(width: 10),
-              ReminderContentWidget(reminder: widget.reminder)
-            ],
-          ),
+            ),
+            const SizedBox(width: 10),
+            ReminderContentWidget(reminder: widget.reminder)
+          ],
         ),
       ),
     );

@@ -7,16 +7,17 @@ part 'reminder_data_model.g.dart';
 
 @HiveType(typeId: AdaptersTypeId.reminder)
 class ReminderDataModel implements DataModel {
-  ReminderDataModel(
-      {required this.id,
-      required this.title,
-      required this.description,
-      required this.time,
-      required this.folderId,
-      required this.repeat,
-      this.contacts,
-      this.action,
-      required this.startDay});
+  ReminderDataModel({
+    required this.id,
+    required this.title,
+    required this.startDay,
+    required this.time,
+    required this.folderId,
+    required this.repeat,
+    this.contacts,
+    this.action,
+    this.description,
+  });
 
   @override
   @HiveField(0)
@@ -32,9 +33,9 @@ class ReminderDataModel implements DataModel {
   @HiveField(5)
   final String? action;
   @HiveField(6)
-  final ReminderRepeat? repeat;
+  final ReminderRepeat repeat;
   @HiveField(7, defaultValue: 1)
   final int startDay;
   @HiveField(8)
-  final String description;
+  final String? description;
 }

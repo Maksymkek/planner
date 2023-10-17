@@ -42,8 +42,4 @@ class DataSource<ItemDataModel extends DataModel> {
     await box.deleteFromDisk();
     await box.close();
   }
-
-  Future<void> closeBox() async {
-    await box.close();
-  }
 }

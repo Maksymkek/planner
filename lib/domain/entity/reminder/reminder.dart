@@ -1,7 +1,9 @@
 import 'package:flutter_contacts/contact.dart';
 import 'package:planner/data/repository/folder_repository.dart';
+import 'package:planner/data/repository/repository.dart';
 import 'package:planner/dependencies/di_container.dart';
 import 'package:planner/domain/entity/entity.dart';
+import 'package:planner/domain/entity/folder/folder.dart';
 import 'package:planner/domain/entity/reminder/reminder_replay.dart';
 import 'package:planner/domain/entity/reminder/reminder_types.dart';
 import 'package:planner/extensions/reminder_link_list_extension.dart';
@@ -12,17 +14,17 @@ class Reminder extends Entity {
       required this.folderId,
       required this.time,
       required this.title,
-      this.description = '',
+      this.description,
       this.repeat = ReminderRepeat.never,
       this.contacts,
       required this.startDay,
       this.action});
 
   final String title;
-  final String description;
+  final String? description;
   DateTime time;
   final int startDay;
-  final ReminderRepeat? repeat;
+  final ReminderRepeat repeat;
   final String folderId;
   final List<Contact>? contacts;
   final String? action;
@@ -51,20 +53,22 @@ class Reminder extends Entity {
     );
   }
 
-  Future<void> updateTimer() async {
+  Future<void> updateTimer(
+      {Repository<Reminder>? reminderRepo, Folder? argFolder}) async {
     final folderRepo = FolderRepository();
-    final folder = await folderRepo.getItem(folderId);
-    var reminderRepo = DIContainer.getReminderRepository(time);
+    final folder = argFolder ?? await folderRepo.getItem(folderId);
+    reminderRepo ??= DIContainer.getReminderRepository(time);
     switch (repeat) {
-      case ReminderRepeat.hour:
-        time = time.add(const Duration(hours: 1));
       case ReminderRepeat.day:
-        time = time.add(const Duration(days: 1));
+        time = getHourRepeat(DateTime.now());
+
+      case ReminderRepeat.week:
+        time = getDayOFWeekUpdate(DateTime.now());
+
       case ReminderRepeat.month:
-        time = getMonthRepeat();
-      case ReminderRepeat.year:
-        time = getYearRepeat();
-      case ReminderRepeat.never || null:
+        time = getDayOfMonthRepeat(DateTime.now());
+
+      case ReminderRepeat.never:
         await reminderRepo.deleteItem(id);
         folder?.reminders.remove(folder.reminders.getLink(this));
         if (folder != null) {
@@ -81,61 +85,36 @@ class Reminder extends Entity {
     }
   }
 
-  DateTime getMonthRepeat() {
-    final int month;
-    final int year;
-    if (time.month != DateTime.december) {
-      month = time.month + 1;
-      year = time.year;
-    } else {
-      month = 1;
-      year = time.year + 1;
-    }
-    if (startDay > 28) {
-      int day = startDay;
-      for (int i = 0; i < 3; i += 1) {
-        final date = _updateMY(month, year, day);
-        if (date != null) {
-          time = date;
-          break;
-        }
-        day -= 1;
-      }
-    } else {
-      time = _updateMY(month, year, startDay) ?? time;
-    }
-
-    return time;
-  }
-
-  DateTime? _updateMY(int? month, int? year, int day) {
-    try {
-      final result = time.copyWith(
-          year: year ?? time.year, month: month ?? time.month, day: day);
-      if (result.month != month) {
-        return null;
-      }
+  DateTime getDayOFWeekUpdate(DateTime now) {
+    var result = now.copyWith(hour: time.hour, minute: time.minute, second: 0);
+    if (now.weekday == time.weekday && result.isAfter(now)) {
       return result;
-    } catch (_) {
-      return null;
     }
+    do {
+      now = now.add(const Duration(days: 1));
+    } while (now.weekday != time.weekday);
+    result = now.copyWith(hour: time.hour, minute: time.minute);
+    return result;
   }
 
-  DateTime getYearRepeat() {
-    final int year = time.year + 1;
-    if (startDay > 28) {
-      int day = startDay;
-      for (int i = 0; i < 3; i += 1) {
-        final date = _updateMY(time.month, year, day);
-        if (date != null) {
-          time = date;
-          break;
-        }
-        day -= 1;
-      }
-    } else {
-      time = _updateMY(time.month, year, startDay) ?? time;
+  DateTime getDayOfMonthRepeat(DateTime now) {
+    var result = DateTime(now.year, now.month, time.day)
+        .copyWith(minute: time.minute, hour: time.hour);
+    if (result.isAfter(now)) {
+      return result;
     }
-    return time;
+    result = result.copyWith(month: result.month + 1);
+    return result;
+  }
+
+  DateTime getHourRepeat(DateTime now) {
+    var result = now.copyWith(hour: time.hour, minute: time.minute, second: 0);
+    if (result.isAfter(now)) {
+      return result;
+    }
+    result = now
+        .add(const Duration(days: 1))
+        .copyWith(minute: time.minute, hour: time.hour);
+    return result;
   }
 }

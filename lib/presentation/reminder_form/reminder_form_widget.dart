@@ -7,7 +7,9 @@ import 'package:planner/domain/entity/reminder/reminder.dart';
 import 'package:planner/presentation/common_widgets/app_bar.dart';
 import 'package:planner/presentation/common_widgets/app_button.dart';
 import 'package:planner/presentation/reminder_form/model/reminder_form_model.dart';
+import 'package:planner/presentation/reminder_form/widgets/contact_picker/contact_picker_widget.dart';
 import 'package:planner/presentation/reminder_form/widgets/date_picker_widget.dart';
+import 'package:planner/presentation/reminder_form/widgets/error_widget.dart';
 import 'package:planner/presentation/reminder_form/widgets/repeat_picker_widget.dart';
 import 'package:planner/presentation/reminder_form/widgets/text_input_widget.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +42,11 @@ class _ReminderFormWidgetState extends State<ReminderFormWidget> {
               onPressed: () {
                 Provider.of<ReminderFormModel>(context, listen: false)
                     .onDoneClicked()
-                    .then((value) => Navigator.of(context).pop());
+                    .then((reminderCreated) {
+                  if (reminderCreated) {
+                    Navigator.of(context).pop();
+                  }
+                });
               },
             ),
           ),
@@ -82,36 +88,14 @@ class FormListWidget extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           controller: ScrollController(initialScrollOffset: 0.1),
           children: [
-            const SizedBox(height: 7),
-            Text(
-              widget.reminder == null ? 'New reminder' : 'Edit reminder',
-              maxLines: 1,
-              style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 5),
-            TextInputWidget(
-              text: 'Title',
-              onChanged: Provider.of<ReminderFormModel>(context, listen: false)
-                  .onTitleChanged,
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(10.0)),
-            ),
-            const Divider(
-              height: 1.0,
-              thickness: 1.0,
-            ),
-            TextInputWidget(
-              text: 'Description',
-              onChanged: Provider.of<ReminderFormModel>(context, listen: false)
-                  .onDescriptionChanged,
-              borderRadius:
-                  const BorderRadius.vertical(bottom: Radius.circular(10.0)),
-            ),
-            const SizedBox(height: 10),
+            buildHeader(),
+            buildTextInputs(context),
+            const ReminderFormErrorWidget(),
             DatePickerWidget(
               name: 'Date',
               text: DateFormat(DateFormat.YEAR_MONTH_DAY)
                   .format(Provider.of<ReminderFormModel>(context).remindTime),
+              minimumDate: DateTime.now(),
               onChanged: Provider.of<ReminderFormModel>(context, listen: false)
                   .onDatePicked,
               mode: CupertinoDatePickerMode.date,
@@ -119,7 +103,7 @@ class FormListWidget extends StatelessWidget {
                   const BorderRadius.vertical(top: Radius.circular(10.0)),
             ),
             const Divider(
-              height: 1.0,
+              height: 0.0,
               thickness: 1.0,
             ),
             DatePickerWidget(
@@ -132,10 +116,62 @@ class FormListWidget extends StatelessWidget {
                   const BorderRadius.vertical(bottom: Radius.circular(10.0)),
             ),
             const SizedBox(height: 10),
-            const RepeatPickerWidget()
+            const RepeatPickerWidget(),
+            const SizedBox(height: 10),
+            ContactPickerWidget(key: ContactPickerWidget.globalKey),
           ],
         );
       }),
+    );
+  }
+
+  Widget buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 7),
+        Text(
+          widget.reminder == null ? 'New reminder' : 'Edit reminder',
+          maxLines: 1,
+          style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 5),
+      ],
+    );
+  }
+
+  Widget buildTextInputs(BuildContext context) {
+    return Column(
+      children: [
+        TextInputWidget(
+          text: 'Title',
+          onChanged: Provider.of<ReminderFormModel>(context, listen: false)
+              .onTitleChanged,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)),
+        ),
+        const Divider(
+          height: 0.0,
+          thickness: 1.0,
+        ),
+        TextInputWidget(
+          text: 'Description',
+          onChanged: Provider.of<ReminderFormModel>(context, listen: false)
+              .onDescriptionChanged,
+          borderRadius: const BorderRadius.all(Radius.zero),
+        ),
+        const Divider(
+          height: 0.0,
+          thickness: 1.0,
+        ),
+        TextInputWidget(
+          text: 'Action',
+          onChanged: Provider.of<ReminderFormModel>(context, listen: false)
+              .onActionChanged,
+          color: CupertinoColors.link,
+          borderRadius:
+              const BorderRadius.vertical(bottom: Radius.circular(10.0)),
+        ),
+      ],
     );
   }
 

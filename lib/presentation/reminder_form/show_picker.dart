@@ -1,22 +1,19 @@
 import 'package:flutter/cupertino.dart';
 
-void showPicker(BuildContext context, Widget child) {
+void showModalWindow(BuildContext context, Widget child, double height) {
   showCupertinoModalPopup<void>(
     context: context,
-    builder: (BuildContext context) => Container(
-      height: 216,
-      padding: const EdgeInsets.only(top: 6.0),
-      // The Bottom margin is provided to align the popup above the system
-      // navigation bar.
-      margin: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      // Provide a background color for the popup.
-      color: CupertinoColors.systemBackground.resolveFrom(context),
-      // Use a SafeArea widget to avoid system overlaps.
+    builder: (BuildContext context) => Padding(
+      padding: const EdgeInsets.all(15.0),
       child: SafeArea(
-        top: false,
-        child: child,
+        top: true,
+        child: Container(
+            height: height,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(16)),
+                color: CupertinoColors.systemBackground.resolveFrom(context)),
+            child: child),
       ),
     ),
   );
