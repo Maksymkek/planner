@@ -9,5 +9,5 @@ abstract base class Repository<Item> {
 
   Future<Item?> getItem(String id);
 
-  Future<void> close();
+  Future<void> deleteFromDisk();
 }

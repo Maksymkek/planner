@@ -19,13 +19,13 @@ class ReminderDataModelAdapter extends TypeAdapter<ReminderDataModel> {
     return ReminderDataModel(
       id: fields[0] as String,
       title: fields[1] as String,
-      description: fields[8] as String,
+      startDay: fields[7] == null ? 1 : fields[7] as int,
       time: fields[2] as DateTime,
       folderId: fields[3] as String,
-      repeat: fields[6] as ReminderRepeat?,
+      repeat: fields[6] as ReminderRepeat,
       contacts: (fields[4] as List?)?.cast<String>(),
       action: fields[5] as String?,
-      startDay: fields[7] == null ? 1 : fields[7] as int,
+      description: fields[8] as String?,
     );
   }
 

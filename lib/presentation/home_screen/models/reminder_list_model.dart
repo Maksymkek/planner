@@ -3,6 +3,7 @@ import 'package:planner/data/repository/reminder_repository_impl.dart';
 import 'package:planner/data/repository/repository.dart';
 import 'package:planner/dependencies/di_container.dart';
 import 'package:planner/domain/entity/reminder/reminder.dart';
+import 'package:planner/domain/entity/reminder/reminder_replay.dart';
 
 class ReminderListModel extends ChangeNotifier {
   ReminderListModel(this.repository, DateTime date) {
@@ -20,20 +21,20 @@ class ReminderListModel extends ChangeNotifier {
   }
 
   Future<void> onUpdateReminderTime(Reminder reminder) async {
-    await reminder.updateTimer();
-    await onScreenLoad();
-    DIContainer.appNotification.cancelNotification(reminder.id);
+    if (reminder.repeat == ReminderRepeat.never) {
+      await reminder.updateTimer();
+      await onScreenLoad();
+      await DIContainer.appNotification.cancelNotification(reminder.id);
+    }
   }
 
   Future<void> checkDateUpdate(DateTime? nowTime) async {
     final now = nowTime ?? DateTime.now();
-    if (now.hour == 0) {
-      final currentDate = DateTime(now.year, now.month, now.day);
-      if (date.isBefore(currentDate)) {
-        date = currentDate;
-        repository = ReminderRepositoryImpl(date);
-        onScreenLoad();
-      }
+    final currentDate = DateTime(now.year, now.month, now.day);
+    if (date.isBefore(currentDate)) {
+      date = currentDate;
+      repository = ReminderRepositoryImpl(date);
+      onScreenLoad();
     }
   }
 }

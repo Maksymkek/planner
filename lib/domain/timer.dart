@@ -4,9 +4,11 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 
-final class AppTimer {
+/// Timer for callbacks bounded to periodic ticks.
+final class AppTimer with WidgetsBindingObserver {
   AppTimer._() {
-    _timer = Timer.periodic(const Duration(seconds: 5), _notify);
+    WidgetsBinding.instance.addObserver(this);
+    _timer = Timer.periodic(const Duration(seconds: 2), _notify);
   }
 
   final List<Future<void> Function(Timer)> _callbacks = [];
@@ -20,9 +22,10 @@ final class AppTimer {
     }
   }
 
+  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _timer = Timer.periodic(const Duration(seconds: 5), _notify);
+      _timer = Timer.periodic(const Duration(seconds: 2), _notify);
     } else if (state == AppLifecycleState.paused) {
       _timer.cancel();
     }

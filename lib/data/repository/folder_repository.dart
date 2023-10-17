@@ -39,7 +39,7 @@ final class FolderRepository extends Repository<Folder> {
   }
 
   @override
-  Future<void> close() async {
-    await dataSource.closeBox();
+  Future<void> deleteFromDisk() async {
+    await dataSource.deleteFromDisk();
   }
 }

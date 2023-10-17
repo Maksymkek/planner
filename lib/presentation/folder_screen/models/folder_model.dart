@@ -4,6 +4,7 @@ import 'package:planner/dependencies/di_container.dart';
 import 'package:planner/domain/entity/folder/folder.dart';
 import 'package:planner/domain/entity/folder/reminder_link.dart';
 import 'package:planner/domain/entity/reminder/reminder.dart';
+import 'package:planner/domain/entity/reminder/reminder_replay.dart';
 import 'package:planner/extensions/reminder_link_list_extension.dart';
 
 class FolderModel extends ChangeNotifier {
@@ -42,7 +43,7 @@ class FolderModel extends ChangeNotifier {
     await DIContainer.getReminderRepository(reminder.time).createItem(reminder);
     reminders.add(reminder);
     folder.reminders.add(ReminderLink(reminder.id, reminder.time));
-    DIContainer.injector.get<Repository<Folder>>().updateItem(folder);
+    await DIContainer.injector.get<Repository<Folder>>().updateItem(folder);
     notifyListeners();
   }
 
@@ -52,23 +53,24 @@ class FolderModel extends ChangeNotifier {
     await DIContainer.appNotification.cancelNotification(reminder.id);
     reminders.remove(reminder);
     folder.reminders.remove(folder.reminders.getLink(reminder));
-    DIContainer.injector.get<Repository<Folder>>().updateItem(folder);
+    await DIContainer.injector.get<Repository<Folder>>().updateItem(folder);
     notifyListeners();
   }
 
   Future<void> onUpdateReminderClick(Reminder reminder) async {
-    await reminder.updateTimer();
-    await onScreenLoad();
-    DIContainer.appNotification.cancelNotification(reminder.id);
+    if (reminder.repeat == ReminderRepeat.never) {
+      await reminder.updateTimer();
+      await onScreenLoad();
+      await DIContainer.appNotification.cancelNotification(reminder.id);
+    }
   }
 
   Future<void> checkDateUpdate(DateTime? nowTime) async {
     final now = nowTime ?? DateTime.now();
-    if (now.hour == 0) {
-      final currentDate = DateTime(now.year, now.month, now.day);
-      if (date.isBefore(currentDate)) {
-        onScreenLoad();
-      }
+    final currentDate = DateTime(now.year, now.month, now.day);
+    if (date.isBefore(currentDate)) {
+      date = currentDate;
+      onScreenLoad();
     }
   }
 }

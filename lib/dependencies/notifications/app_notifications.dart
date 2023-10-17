@@ -5,14 +5,22 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:planner/domain/entity/folder/folder.dart';
 import 'package:planner/domain/entity/reminder/reminder.dart';
+import 'package:planner/domain/entity/reminder/reminder_replay.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:url_launcher/url_launcher.dart';
 
 class AppNotification {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   final FlutterBackgroundService service = FlutterBackgroundService();
-  bool _isGranted = false;
+
+  final _dateTimeComponents = {
+    ReminderRepeat.day: DateTimeComponents.time,
+    ReminderRepeat.month: DateTimeComponents.dayOfMonthAndTime,
+    ReminderRepeat.week: DateTimeComponents.dayOfWeekAndTime,
+    ReminderRepeat.never: DateTimeComponents.dateAndTime,
+  };
 
   Future<void> init() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -50,23 +58,26 @@ class AppNotification {
         InitializationSettings(
             android: initializationSettingsAndroid,
             iOS: initializationSettingsDarwin);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: onDidReceiveLocalNotification,
-        onDidReceiveBackgroundNotificationResponse:
-            onDidReceiveBackgroundNotificationResponse);
-  }
-
-  static void onDidReceiveBackgroundNotificationResponse(
-      NotificationResponse notificationResponse) {
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: onDidReceiveLocalNotification,
+      onDidReceiveBackgroundNotificationResponse: onDidReceiveLocalNotification,
+    );
   }
 
   static void onDidReceiveLocalNotification(
-      NotificationResponse notificationResponse) {}
+      NotificationResponse notificationResponse) async {
+    if (notificationResponse.payload != null) {
+      var actionUrl = Uri.parse(notificationResponse.payload ?? '');
+      if (await canLaunchUrl(actionUrl)) {
+        try {
+          launchUrl(actionUrl, mode: LaunchMode.inAppWebView);
+        } catch (_) {}
+      }
+    }
+  }
 
   Future<bool> requestPermissions() async {
-    if (_isGranted) return true;
     if (Platform.isIOS) {
       final bool? permission = await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
@@ -76,23 +87,22 @@ class AppNotification {
             badge: true,
             sound: true,
           );
-      _isGranted = permission ?? false;
+      return permission ?? false;
     } else if (Platform.isAndroid) {
       final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
           flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>();
 
       final bool? permission = await androidImplementation?.requestPermission();
-      _isGranted = permission ?? false;
+      return permission ?? false;
     }
-    return _isGranted;
+    return false;
   }
 
   Future<void> setNotification(Reminder reminder, Folder folder) async {
     if (!await requestPermissions()) {
       return;
     }
-
     tz.initializeTimeZones();
     final tz.TZDateTime scheduledAt =
         tz.TZDateTime.from(reminder.time, tz.local);
@@ -112,11 +122,20 @@ class AppNotification {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.wallClockTime,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      payload: reminder.action,
+      matchDateTimeComponents: _dateTimeComponents[reminder.repeat],
     );
   }
 
-  Future<void> cancelNotification(String reminderId) async {
+  /// Cancels notification with appointed id.
+  ///
+  /// if [delayed} is true, then canceling will be after 2 minutes
+  Future<void> cancelNotification(String reminderId,
+      {bool delayed = false}) async {
     try {
+      if (delayed) {
+        await Future.delayed(const Duration(minutes: 2));
+      }
       await flutterLocalNotificationsPlugin.cancel(reminderId.hashCode);
     } catch (_) {}
   }

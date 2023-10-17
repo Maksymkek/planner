@@ -45,7 +45,10 @@ class ReminderTileWidget extends StatelessWidget {
                   .last !=
               reminder,
           onPressed: () {
-            Navigator.pushNamed(context, Routes.folderPage, arguments: folder);
+            Navigator.pushNamed(context, Routes.folderPage, arguments: folder)
+                .whenComplete(
+                    Provider.of<ReminderListModel>(context, listen: false)
+                        .onScreenLoad);
           },
         ));
   }

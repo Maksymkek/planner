@@ -22,7 +22,7 @@ class FolderTileWidget extends StatelessWidget {
         motion: const DrawerMotion(),
         children: [
           SlidableActionWidget(
-              icon: CupertinoIcons.delete,
+              icon: CupertinoIcons.delete_solid,
               color: AppColors.carmineRed,
               onPressed: () {
                 Provider.of<FolderListModel>(context, listen: false)
@@ -46,7 +46,6 @@ class FolderTileWidget extends StatelessWidget {
           Navigator.of(context)
               .pushNamed(Routes.folderPage, arguments: folder)
               .whenComplete(() {
-            Provider.of<FolderListModel>(context, listen: false).onScreenLoad();
             Provider.of<ReminderListModel>(context, listen: false)
                 .onScreenLoad();
           });

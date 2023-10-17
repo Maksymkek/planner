@@ -20,8 +20,7 @@ class MainContentWidget extends StatefulWidget {
   State<MainContentWidget> createState() => _MainContentWidgetState();
 }
 
-class _MainContentWidgetState extends State<MainContentWidget>
-    with WidgetsBindingObserver {
+class _MainContentWidgetState extends State<MainContentWidget> {
   late final Future<void> onScreenLoad;
 
   @override
@@ -51,20 +50,13 @@ class _MainContentWidgetState extends State<MainContentWidget>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     onScreenLoad = screenLoadFun().whenComplete(() {
       AppTimer.instance().addListener(_checkUpdate);
     });
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    AppTimer.instance().didChangeAppLifecycleState(state);
-  }
-
-  @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     AppTimer.instance().removeListener(_checkUpdate);
     super.dispose();
   }

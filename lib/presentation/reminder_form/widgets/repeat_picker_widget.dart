@@ -3,6 +3,7 @@ import 'package:planner/app_colors.dart';
 import 'package:planner/domain/entity/reminder/reminder_replay.dart';
 import 'package:planner/presentation/reminder_form/model/reminder_form_model.dart';
 import 'package:planner/presentation/reminder_form/show_picker.dart';
+import 'package:planner/presentation/reminder_form/widgets/picker_container_widget.dart';
 import 'package:provider/provider.dart';
 
 class RepeatPickerWidget extends StatelessWidget {
@@ -10,11 +11,8 @@ class RepeatPickerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: const BoxDecoration(
-          color: CupertinoColors.lightBackgroundGray,
-          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+    return PickerContainerWidget(
+      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -30,7 +28,6 @@ class RepeatPickerWidget extends StatelessWidget {
           ),
           CupertinoButton(
             onPressed: () {
-              return;
               buildShowPicker(context);
             },
             child: Text(Provider.of<ReminderFormModel>(context).repeat.name),
@@ -41,25 +38,26 @@ class RepeatPickerWidget extends StatelessWidget {
   }
 
   void buildShowPicker(BuildContext context) {
-    return showPicker(
-      context,
-      CupertinoPicker(
-          magnification: 1.22,
-          squeeze: 1.2,
-          useMagnifier: true,
-          // This sets the initial item.
-          scrollController: FixedExtentScrollController(
-            initialItem: Provider.of<ReminderFormModel>(context, listen: false)
-                .repeat
-                .index,
-          ),
-          onSelectedItemChanged:
-              Provider.of<ReminderFormModel>(context, listen: false)
-                  .onRepeatPicked,
-          itemExtent: 32.0,
-          children: List<Widget>.generate(1, (int index) {
-            return Center(child: Text(ReminderRepeat.never.name));
-          })),
-    );
+    return showModalWindow(
+        context,
+        CupertinoPicker(
+            magnification: 1.22,
+            squeeze: 1.2,
+            useMagnifier: true,
+            scrollController: FixedExtentScrollController(
+              initialItem:
+                  Provider.of<ReminderFormModel>(context, listen: false)
+                      .repeat
+                      .index,
+            ),
+            onSelectedItemChanged:
+                Provider.of<ReminderFormModel>(context, listen: false)
+                    .onRepeatPicked,
+            itemExtent: 32.0,
+            children: List<Widget>.generate(ReminderRepeat.values.length,
+                (int index) {
+              return Center(child: Text(ReminderRepeat.values[index].name));
+            })),
+        160);
   }
 }

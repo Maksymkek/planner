@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:planner/app_colors.dart';
 import 'package:planner/presentation/reminder_form/show_picker.dart';
+import 'package:planner/presentation/reminder_form/widgets/picker_container_widget.dart';
 
 class DatePickerWidget extends StatelessWidget {
   const DatePickerWidget(
@@ -9,21 +10,20 @@ class DatePickerWidget extends StatelessWidget {
       required this.text,
       required this.onChanged,
       required this.mode,
-      required this.borderRadius});
+      required this.borderRadius,
+      this.minimumDate});
 
   final String name;
   final String text;
+  final DateTime? minimumDate;
   final Function(DateTime) onChanged;
   final CupertinoDatePickerMode mode;
   final BorderRadius borderRadius;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-          color: CupertinoColors.lightBackgroundGray,
-          borderRadius: borderRadius),
+    return PickerContainerWidget(
+      borderRadius: borderRadius,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -39,16 +39,16 @@ class DatePickerWidget extends StatelessWidget {
           ),
           CupertinoButton(
             onPressed: () {
-              showPicker(
-                context,
-                CupertinoDatePicker(
-                  initialDateTime: DateTime.now(),
-                  mode: mode,
-                  use24hFormat: true,
-                  showDayOfWeek: true,
-                  onDateTimeChanged: onChanged,
-                ),
-              );
+              showModalWindow(
+                  context,
+                  CupertinoDatePicker(
+                    minimumDate: minimumDate,
+                    mode: mode,
+                    use24hFormat: true,
+                    showDayOfWeek: true,
+                    onDateTimeChanged: onChanged,
+                  ),
+                  260);
             },
             child: Text(
               text,
