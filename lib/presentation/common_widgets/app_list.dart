@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'app_shadow.dart';
+
 class AppListWidget extends StatelessWidget {
   const AppListWidget({super.key, required this.children, this.edgeInsets});
 
@@ -11,9 +13,10 @@ class AppListWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: edgeInsets,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(16.0))),
+          boxShadow: AppShadows.lightShadow,
+          borderRadius: const BorderRadius.all(Radius.circular(16.0))),
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:planner/app_colors.dart';
 import 'package:planner/domain/entity/reminder/reminder.dart';
 import 'package:planner/extensions/datetime_extension.dart';
+import 'package:planner/presentation/common_widgets/app_shadow.dart';
 import 'package:planner/presentation/reminder_details_screen/contact_info_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -98,50 +98,56 @@ class ReminderDetailsScreen extends StatelessWidget {
                             child: Container(
                                 width: double.infinity,
                                 padding: const EdgeInsets.symmetric(
-                                    vertical: 6.0, horizontal: 10.0),
-                                decoration: const BoxDecoration(
-                                    color: AppColors.light,
-                                    borderRadius: BorderRadius.all(
+                                    vertical: 10.0, horizontal: 14.0),
+                                decoration: BoxDecoration(
+                                    color: CupertinoColors.white,
+                                    boxShadow: AppShadows.lightShadow,
+                                    borderRadius: const BorderRadius.all(
                                         Radius.circular(16.0))),
                                 child: Text(reminder.description ?? '')),
                           ),
                         if (reminder.action != null)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
-                            child: CupertinoButton(
-                                color: AppColors.light,
-                                padding:
-                                    const EdgeInsets.only(left: 10, right: 10),
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(16.0)),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      CupertinoIcons.link,
-                                      color: CupertinoColors.link,
-                                      size: 16,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Expanded(
-                                        child: Text(
-                                      reminder.action!,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                          color: CupertinoColors.link),
-                                    ))
-                                  ],
-                                ),
-                                onPressed: () async {
-                                  var actionUrl =
-                                      Uri.parse(reminder.action ?? '');
-                                  if (await canLaunchUrl(actionUrl)) {
-                                    try {
-                                      await launchUrl(actionUrl,
-                                          mode: LaunchMode.inAppWebView);
-                                    } catch (_) {}
-                                  }
-                                }),
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                boxShadow: AppShadows.lightShadow,
+                              ),
+                              child: CupertinoButton(
+                                  color: CupertinoColors.white,
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(16.0)),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        CupertinoIcons.link,
+                                        color: CupertinoColors.link,
+                                        size: 16,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                          child: Text(
+                                        reminder.action!,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: CupertinoColors.link),
+                                      ))
+                                    ],
+                                  ),
+                                  onPressed: () async {
+                                    var actionUrl =
+                                        Uri.parse(reminder.action ?? '');
+                                    if (await canLaunchUrl(actionUrl)) {
+                                      try {
+                                        await launchUrl(actionUrl,
+                                            mode: LaunchMode.inAppWebView);
+                                      } catch (_) {}
+                                    }
+                                  }),
+                            ),
                           ),
                         if (reminder.contacts != null) buildContactList()
                       ]),
@@ -162,15 +168,16 @@ class ReminderDetailsScreen extends StatelessWidget {
         SizedBox(
           height: (height > 129) ? 129 : height,
           child: Container(
-            decoration: const BoxDecoration(
-                color: AppColors.light,
-                borderRadius: BorderRadius.all(Radius.circular(16.0))),
+            decoration: BoxDecoration(
+                color: CupertinoColors.white,
+                boxShadow: AppShadows.lightShadow,
+                borderRadius: const BorderRadius.all(Radius.circular(16.0))),
             child: RawScrollbar(
-              padding: const EdgeInsets.only(top: 12, bottom: 12, right: 2),
+              padding: const EdgeInsets.only(top: 12, bottom: 12, right: 8),
               thickness: 4,
               thumbColor: CupertinoColors.systemGrey,
               radius: const Radius.circular(2.0),
-              trackColor: CupertinoColors.black,
+              trackColor: CupertinoColors.darkBackgroundGray,
               thumbVisibility: true,
               child: ListView(
                   children: reminder.contacts!

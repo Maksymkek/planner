@@ -17,7 +17,11 @@ class Folder extends Entity {
   final IconData icon;
   List<ReminderLink> reminders;
 
-  Icon getIcon() => Icon(icon, size: 25, color: Colors.white);
+  Icon getIcon() => Icon(
+        icon,
+        size: 24,
+        color: Colors.white,
+      );
 
   Folder copyWith(
       {String? id,

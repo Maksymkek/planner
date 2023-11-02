@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:planner/app_colors.dart';
 import 'package:planner/presentation/common_widgets/contact_preview/contact_list_preview.dart';
 import 'package:planner/presentation/reminder_form/model/reminder_form_model.dart';
@@ -19,7 +18,7 @@ class _ContactPickerWidgetState extends State<ContactPickerWidget> {
   @override
   Widget build(BuildContext context) {
     return PickerContainerWidget(
-      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+      borderRadius: const BorderRadius.all(Radius.circular(16.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -34,6 +33,7 @@ class _ContactPickerWidgetState extends State<ContactPickerWidget> {
             ),
           ),
           CupertinoButton(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             onPressed: () {
               showModalWindow(
                 context,
@@ -63,7 +63,9 @@ class _ContactPickerWidgetState extends State<ContactPickerWidget> {
     return Row(
       children: [
         ContactListPreviewWidget(
-            contacts: Provider.of<ReminderFormModel>(context).contacts ?? []),
+          contacts: Provider.of<ReminderFormModel>(context).contacts ?? [],
+          size: 24,
+        ),
         (contactsLength == 0)
             ? const SizedBox()
             : Padding(
@@ -71,7 +73,7 @@ class _ContactPickerWidgetState extends State<ContactPickerWidget> {
                 child: Container(
                   width: 1,
                   height: 22,
-                  color: CupertinoColors.placeholderText,
+                  color: CupertinoColors.link,
                 ),
               ),
         Text(text),

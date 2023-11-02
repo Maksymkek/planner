@@ -7,8 +7,8 @@ import 'package:planner/domain/entity/reminder/reminder.dart';
 import 'package:planner/domain/entity/reminder/reminder_replay.dart';
 import 'package:planner/extensions/reminder_link_list_extension.dart';
 
-class FolderModel extends ChangeNotifier {
-  FolderModel(this.folder) {
+class FolderScreenModel extends ChangeNotifier {
+  FolderScreenModel(this.folder) {
     repository = DIContainer.injector.get<Repository<Folder>>();
     final now = DateTime.now();
     date = DateTime(now.year, now.month, now.day);

@@ -29,8 +29,11 @@ class _ReminderFormErrorWidgetState extends State<ReminderFormErrorWidget> {
         duration: const Duration(milliseconds: 250),
         builder: (context, size, child) {
           return Padding(
-            padding:
-                const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 2),
+            padding: EdgeInsets.only(
+                left: 10,
+                right: 10,
+                top: 10,
+                bottom: size == 0 ? 0 : size * 0.14),
             child: Row(
               children: [
                 Expanded(

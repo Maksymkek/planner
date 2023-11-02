@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:planner/domain/entity/folder/folder.dart';
+import 'package:planner/presentation/common_widgets/app_shadow.dart';
 import 'package:planner/presentation/folder_form/folder_form_model.dart';
 import 'package:planner/presentation/folder_form/icon_picker/folder_form_buttons.dart';
 import 'package:planner/presentation/folder_form/icon_picker/icon_picker_list.dart';
@@ -60,22 +61,23 @@ class _FolderFormWidgetState extends State<FolderFormWidget>
               child: Container(
                 padding: const EdgeInsets.all(20.0),
                 width: MediaQuery.of(context).size.width * 0.8,
-                decoration: const BoxDecoration(
-                    color: CupertinoColors.lightBackgroundGray,
-                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                decoration: BoxDecoration(
+                    color: CupertinoColors.white,
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 20,
+                          color: CupertinoColors.black.withOpacity(0.25))
+                    ],
+                    borderRadius:
+                        const BorderRadius.all(Radius.circular(20.0))),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'New list',
-                          style: TextStyle(
-                              fontSize: 26, fontWeight: FontWeight.w500),
-                        ),
-                      ],
+                    const Text(
+                      'New list',
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -117,10 +119,15 @@ class _FolderFormWidgetState extends State<FolderFormWidget>
                         placeholderStyle: const TextStyle(
                             fontSize: 16,
                             color: CupertinoColors.placeholderText),
-                        decoration: const BoxDecoration(),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                            boxShadow: AppShadows.timerShadow,
+                            color: CupertinoColors.white,
+                            borderRadius: BorderRadius.circular(16.0)),
                       );
                     }),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 15),
                     FolderFormButtons(onClose: _remove)
                   ],
                 ),

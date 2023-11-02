@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:planner/domain/entity/folder/folder.dart';
 import 'package:planner/domain/entity/reminder/reminder.dart';
@@ -13,7 +12,6 @@ import 'package:url_launcher/url_launcher.dart';
 class AppNotification {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  final FlutterBackgroundService service = FlutterBackgroundService();
 
   final _dateTimeComponents = {
     ReminderRepeat.day: DateTimeComponents.time,
@@ -99,32 +97,36 @@ class AppNotification {
     return false;
   }
 
-  Future<void> setNotification(Reminder reminder, Folder folder) async {
+  Future<bool> setNotification(Reminder reminder, Folder folder) async {
     if (!await requestPermissions()) {
-      return;
+      return false;
     }
     tz.initializeTimeZones();
     final tz.TZDateTime scheduledAt =
         tz.TZDateTime.from(reminder.time, tz.local);
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      reminder.id.hashCode,
-      folder.title,
-      reminder.title,
-      scheduledAt,
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'ScheduleNotification001',
-          'NotifyMe',
-          ongoing: true,
+    try {
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        reminder.id.hashCode,
+        folder.title,
+        reminder.title,
+        scheduledAt,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'ScheduleNotification001',
+            'NotifyMe',
+            ongoing: true,
+          ),
         ),
-      ),
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.wallClockTime,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      payload: reminder.action,
-      matchDateTimeComponents: _dateTimeComponents[reminder.repeat],
-    );
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.wallClockTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        payload: reminder.action,
+        matchDateTimeComponents: _dateTimeComponents[reminder.repeat],
+      );
+    } catch (_) {
+      return false;
+    }
+    return true;
   }
 
   /// Cancels notification with appointed id.

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:planner/app_colors.dart';
+import 'package:planner/presentation/reminder_form/model/reminder_form_model.dart';
 import 'package:planner/presentation/reminder_form/show_picker.dart';
 import 'package:planner/presentation/reminder_form/widgets/picker_container_widget.dart';
+import 'package:provider/provider.dart';
 
 class DatePickerWidget extends StatelessWidget {
   const DatePickerWidget(
@@ -42,7 +44,9 @@ class DatePickerWidget extends StatelessWidget {
               showModalWindow(
                   context,
                   CupertinoDatePicker(
-                    minimumDate: minimumDate,
+                    initialDateTime:
+                        Provider.of<ReminderFormModel>(context, listen: false)
+                            .remindTime,
                     mode: mode,
                     use24hFormat: true,
                     showDayOfWeek: true,
