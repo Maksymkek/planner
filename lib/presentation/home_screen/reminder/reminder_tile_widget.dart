@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:planner/app_colors.dart';
 import 'package:planner/domain/entity/reminder/reminder.dart';
 import 'package:planner/extensions/folder_list_extension.dart';
+import 'package:planner/presentation/common_widgets/app_shadow.dart';
 import 'package:planner/presentation/common_widgets/slidable_widget.dart';
 import 'package:planner/presentation/common_widgets/tile_widget.dart';
 import 'package:planner/presentation/home_screen/models/folder_list_model.dart';
@@ -58,7 +59,9 @@ class ReminderTileWidget extends StatelessWidget {
     final String formatted = formatter.format(reminder.time);
     return Container(
       decoration: BoxDecoration(
-          color: AppColors.light, borderRadius: BorderRadius.circular(8.0)),
+          color: AppColors.light,
+          borderRadius: BorderRadius.circular(8.0),
+          boxShadow: AppShadows.timerShadow),
       padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
       child: Row(
         children: [

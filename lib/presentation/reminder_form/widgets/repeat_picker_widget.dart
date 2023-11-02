@@ -12,7 +12,7 @@ class RepeatPickerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PickerContainerWidget(
-      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+      borderRadius: const BorderRadius.all(Radius.circular(16.0)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

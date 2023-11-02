@@ -59,15 +59,17 @@ class _TileWidgetState extends State<TileWidget>
                             const BorderRadius.all(Radius.circular(8.0))),
                     child: widget.icon,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Text(
-                      widget.title,
-                      maxLines: 1,
-                      style: const TextStyle(fontSize: 16),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: Text(
+                        widget.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 16),
+                      ),
                     ),
                   ),
-                  const Spacer(),
                   widget.trailing
                 ],
               ),

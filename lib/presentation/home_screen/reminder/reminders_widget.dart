@@ -20,11 +20,15 @@ class TodayRemindersWidget extends StatefulWidget {
 class _TodayRemindersWidgetState extends State<TodayRemindersWidget> {
   @override
   Widget build(BuildContext context) {
+    final todayReminders = Provider.of<ReminderListModel>(context).reminders;
+    if (todayReminders.isEmpty) {
+      return const SizedBox();
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.only(left: 14.0, bottom: 5.0),
+          padding: EdgeInsets.only(left: 14.0, bottom: 8.0),
           child: Text(
             'Today',
             textAlign: TextAlign.start,
@@ -34,8 +38,8 @@ class _TodayRemindersWidgetState extends State<TodayRemindersWidget> {
         AppListWidget(
             children: Provider.of<ReminderListModel>(context)
                 .reminders
-                .map<ReminderTileWidget>((e) => ReminderTileWidget(
-                      reminder: e,
+                .map<ReminderTileWidget>((reminder) => ReminderTileWidget(
+                      reminder: reminder,
                     ))
                 .toList()),
       ],

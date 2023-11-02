@@ -27,7 +27,8 @@ class ContactPreviewWidget extends StatelessWidget {
       width: size + 0.5,
       height: size + 0.5,
       decoration: const BoxDecoration(
-          color: CupertinoColors.lightBackgroundGray, shape: BoxShape.circle),
+          color: CupertinoColors.extraLightBackgroundGray,
+          shape: BoxShape.circle),
       child: Icon(
         CupertinoIcons.person_fill,
         size: size * 0.8,

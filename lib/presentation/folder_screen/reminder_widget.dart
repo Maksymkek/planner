@@ -3,10 +3,11 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:planner/app_colors.dart';
 import 'package:planner/domain/entity/reminder/reminder.dart';
 import 'package:planner/presentation/common_widgets/slidable_widget.dart';
-import 'package:planner/presentation/folder_screen/models/folder_model.dart';
+import 'package:planner/presentation/folder_screen/model/folder_screen_model.dart';
 import 'package:planner/presentation/folder_screen/reminder_content_widget.dart';
 import 'package:planner/presentation/reminder_details_screen/reminder_details_screen.dart';
 import 'package:planner/presentation/reminder_form/show_picker.dart';
+import 'package:planner/presentation/router.dart';
 import 'package:provider/provider.dart';
 
 class ReminderWidget extends StatefulWidget {
@@ -30,9 +31,24 @@ class _ReminderWidgetState extends State<ReminderWidget>
   Widget build(BuildContext context) {
     return Slidable(
       endActionPane: ActionPane(
-        extentRatio: 0.4,
+        extentRatio: 0.6,
         motion: const DrawerMotion(),
         children: [
+          SlidableActionWidget(
+            onPressed: () {
+              Navigator.pushNamed(
+                  context, Routes.editReminderFormPage, arguments: [
+                widget.reminder,
+                Provider.of<FolderScreenModel>(context, listen: false).folder
+              ]).whenComplete(() {
+                Provider.of<FolderScreenModel>(context, listen: false)
+                    .onScreenLoad();
+              });
+            },
+            icon: CupertinoIcons.pencil,
+            iconSize: 26,
+            color: CupertinoColors.activeBlue,
+          ),
           SlidableActionWidget(
             onPressed: () {
               showModalWindow(
@@ -42,11 +58,11 @@ class _ReminderWidgetState extends State<ReminderWidget>
             },
             icon: CupertinoIcons.info_circle_fill,
             iconSize: 26,
-            color: AppColors.lightBlue,
+            color: CupertinoColors.systemGrey2,
           ),
           SlidableActionWidget(
             onPressed: () {
-              Provider.of<FolderModel>(context, listen: false)
+              Provider.of<FolderScreenModel>(context, listen: false)
                   .onDeleteReminderClick(widget.reminder);
             },
             icon: CupertinoIcons.delete_solid,
@@ -56,7 +72,7 @@ class _ReminderWidgetState extends State<ReminderWidget>
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 20, top: 3),
+        padding: const EdgeInsets.only(left: 20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -69,7 +85,7 @@ class _ReminderWidgetState extends State<ReminderWidget>
                 controller.forward().whenComplete(() {
                   controller.reverse();
                 }).whenComplete(() =>
-                    Provider.of<FolderModel>(context, listen: false)
+                    Provider.of<FolderScreenModel>(context, listen: false)
                         .onUpdateReminderClick(widget.reminder));
               },
               child: Padding(

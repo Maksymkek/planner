@@ -5,7 +5,6 @@ import 'package:planner/dependencies/di_container.dart';
 import 'package:planner/domain/entity/entity.dart';
 import 'package:planner/domain/entity/folder/folder.dart';
 import 'package:planner/domain/entity/reminder/reminder_replay.dart';
-import 'package:planner/domain/entity/reminder/reminder_types.dart';
 import 'package:planner/extensions/reminder_link_list_extension.dart';
 
 class Reminder extends Entity {
@@ -33,7 +32,6 @@ class Reminder extends Entity {
       {String? id,
       String? folderId,
       String? title,
-      ReminderType? type,
       DateTime? time,
       List<Contact>? contacts,
       ReminderRepeat? repeat,

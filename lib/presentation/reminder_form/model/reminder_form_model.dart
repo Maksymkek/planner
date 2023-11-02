@@ -6,6 +6,7 @@ import 'package:planner/domain/entity/folder/folder.dart';
 import 'package:planner/domain/entity/folder/reminder_link.dart';
 import 'package:planner/domain/entity/reminder/reminder.dart';
 import 'package:planner/domain/entity/reminder/reminder_replay.dart';
+import 'package:planner/extensions/reminder_link_list_extension.dart';
 import 'package:uuid/uuid.dart';
 
 class ReminderFormModel extends ChangeNotifier {
@@ -20,13 +21,13 @@ class ReminderFormModel extends ChangeNotifier {
   late ReminderRepeat repeat;
   late DateTime remindTime;
   late List<Contact>? contacts;
-  late String? action;
+  late String action;
 
   void onScreenLoad() {
     title = reminder.title;
-    action = reminder.action;
+    action = reminder.action ?? '';
     description = reminder.description ?? '';
-    repeat = reminder.repeat ?? ReminderRepeat.never;
+    repeat = reminder.repeat;
     final now = DateTime.now();
     contacts = reminder.contacts;
     remindTime = reminder.id != '-1'
@@ -81,6 +82,10 @@ class ReminderFormModel extends ChangeNotifier {
       errorMessage = 'Monthly repeat only supports 1-28 days';
       notifyListeners();
       return false;
+    } else if (title == '') {
+      errorMessage = 'Reminder title must be set';
+      notifyListeners();
+      return false;
     }
     final appNotificationManager = DIContainer.appNotification;
     if (await appNotificationManager.requestPermissions()) {
@@ -108,11 +113,19 @@ class ReminderFormModel extends ChangeNotifier {
             break;
         }
       }
-      folder.reminders.add(ReminderLink(newReminder.id, newReminder.time));
+      if (reminder.id != '-1') {
+        appNotificationManager.cancelNotification(reminder.id).whenComplete(
+            () => appNotificationManager.setNotification(newReminder, folder));
+        folder.reminders.updateLink(newReminder);
+      } else {
+        folder.reminders.add(ReminderLink(newReminder.id, newReminder.time));
+        appNotificationManager.setNotification(newReminder, folder);
+      }
+
       await DIContainer.injector.get<Repository<Folder>>().updateItem(folder);
       await DIContainer.getReminderRepository(newReminder.time)
           .updateItem(newReminder);
-      appNotificationManager.setNotification(newReminder, folder);
+
       return true;
     }
     return false;

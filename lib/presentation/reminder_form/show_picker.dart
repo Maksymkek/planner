@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:planner/app_colors.dart';
 
 void showModalWindow(BuildContext context, Widget child, double height) {
   showCupertinoModalPopup<void>(
@@ -10,9 +11,9 @@ void showModalWindow(BuildContext context, Widget child, double height) {
         child: Container(
             height: height,
             width: double.infinity,
-            decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(16)),
-                color: CupertinoColors.systemBackground.resolveFrom(context)),
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+                color: AppColors.light),
             child: child),
       ),
     ),

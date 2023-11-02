@@ -5,9 +5,7 @@ import 'package:planner/domain/entity/folder/folder.dart';
 import 'package:planner/presentation/common_widgets/app_bar.dart';
 import 'package:planner/presentation/common_widgets/app_button.dart';
 import 'package:planner/presentation/folder_screen/folder_reminders_widget.dart';
-import 'package:planner/presentation/folder_screen/models/folder_model.dart';
-import 'package:planner/presentation/home_screen/main_content_widget.dart';
-import 'package:planner/presentation/home_screen/models/reminder_list_model.dart';
+import 'package:planner/presentation/folder_screen/model/folder_screen_model.dart';
 import 'package:planner/presentation/router.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +19,7 @@ class FolderScreen extends StatefulWidget {
 }
 
 class _FolderScreenState extends State<FolderScreen> {
-  late final FolderModel model;
+  late final FolderScreenModel model;
   late final Future<void> screenLoad;
 
   @override
@@ -93,22 +91,14 @@ class _FolderScreenState extends State<FolderScreen> {
     Navigator.pushNamed(context, Routes.newReminderFormPage,
             arguments: widget.folder)
         .whenComplete(() {
-      Provider.of<FolderModel>(context, listen: false)
-          .onScreenLoad()
-          .whenComplete(() {
-        var homeContext = MainContentWidget.globalKey.currentContext;
-        if (homeContext != null) {
-          Provider.of<ReminderListModel>(homeContext, listen: false)
-              .onScreenLoad();
-        }
-      });
+      Provider.of<FolderScreenModel>(context, listen: false).onScreenLoad();
     });
   }
 
   @override
   void initState() {
     super.initState();
-    model = FolderModel(widget.folder);
+    model = FolderScreenModel(widget.folder);
     screenLoad = model.onScreenLoad();
   }
 }

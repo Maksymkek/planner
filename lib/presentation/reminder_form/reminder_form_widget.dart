@@ -100,7 +100,7 @@ class FormListWidget extends StatelessWidget {
                   .onDatePicked,
               mode: CupertinoDatePickerMode.date,
               borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(10.0)),
+                  const BorderRadius.vertical(top: Radius.circular(16.0)),
             ),
             const Divider(
               height: 0.0,
@@ -113,7 +113,7 @@ class FormListWidget extends StatelessWidget {
                   .onTimePicked,
               mode: CupertinoDatePickerMode.time,
               borderRadius:
-                  const BorderRadius.vertical(bottom: Radius.circular(10.0)),
+                  const BorderRadius.vertical(bottom: Radius.circular(16.0)),
             ),
             const SizedBox(height: 10),
             const RepeatPickerWidget(),
@@ -130,10 +130,13 @@ class FormListWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 7),
-        Text(
-          widget.reminder == null ? 'New reminder' : 'Edit reminder',
-          maxLines: 1,
-          style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w600),
+        Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Text(
+            widget.reminder == null ? 'New reminder' : 'Edit reminder',
+            maxLines: 1,
+            style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w600),
+          ),
         ),
         const SizedBox(height: 5),
       ],
@@ -141,22 +144,23 @@ class FormListWidget extends StatelessWidget {
   }
 
   Widget buildTextInputs(BuildContext context) {
+    final model = Provider.of<ReminderFormModel>(context, listen: false);
     return Column(
       children: [
         TextInputWidget(
-          text: 'Title',
-          onChanged: Provider.of<ReminderFormModel>(context, listen: false)
-              .onTitleChanged,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)),
+          placeholder: 'Title',
+          text: model.title,
+          onChanged: model.onTitleChanged,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
         ),
         const Divider(
           height: 0.0,
           thickness: 1.0,
         ),
         TextInputWidget(
-          text: 'Description',
-          onChanged: Provider.of<ReminderFormModel>(context, listen: false)
-              .onDescriptionChanged,
+          placeholder: 'Description',
+          text: model.description,
+          onChanged: model.onDescriptionChanged,
           borderRadius: const BorderRadius.all(Radius.zero),
         ),
         const Divider(
@@ -164,12 +168,12 @@ class FormListWidget extends StatelessWidget {
           thickness: 1.0,
         ),
         TextInputWidget(
-          text: 'Action',
-          onChanged: Provider.of<ReminderFormModel>(context, listen: false)
-              .onActionChanged,
+          placeholder: 'Action',
+          text: model.action,
+          onChanged: model.onActionChanged,
           color: CupertinoColors.link,
           borderRadius:
-              const BorderRadius.vertical(bottom: Radius.circular(10.0)),
+              const BorderRadius.vertical(bottom: Radius.circular(16.0)),
         ),
       ],
     );

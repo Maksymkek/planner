@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:planner/domain/timer.dart';
-import 'package:planner/presentation/folder_screen/models/folder_model.dart';
+import 'package:planner/presentation/folder_screen/model/folder_screen_model.dart';
 import 'package:planner/presentation/folder_screen/reminder_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +17,7 @@ class _FolderRemindersWidgetState extends State<FolderRemindersWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: Provider.of<FolderModel>(context)
+      children: Provider.of<FolderScreenModel>(context)
           .reminders
           .map((reminder) => ReminderWidget(reminder))
           .toList(),
@@ -39,8 +39,9 @@ class _FolderRemindersWidgetState extends State<FolderRemindersWidget> {
   Future<void> _checkUpdate(Timer timer) async {
     bool needToUpdate = false;
     final now = DateTime.now();
-    await Provider.of<FolderModel>(context, listen: false).checkDateUpdate(now);
-    Provider.of<FolderModel>(context, listen: false)
+    await Provider.of<FolderScreenModel>(context, listen: false)
+        .checkDateUpdate(now);
+    Provider.of<FolderScreenModel>(context, listen: false)
         .reminders
         .forEach((reminder) async {
       if (reminder.time.isBefore(now)) {
@@ -50,7 +51,8 @@ class _FolderRemindersWidgetState extends State<FolderRemindersWidget> {
     });
     if (needToUpdate) {
       needToUpdate = false;
-      await Provider.of<FolderModel>(context, listen: false).onScreenLoad();
+      await Provider.of<FolderScreenModel>(context, listen: false)
+          .onScreenLoad();
     }
   }
 }

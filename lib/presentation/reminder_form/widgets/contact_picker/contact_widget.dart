@@ -118,7 +118,8 @@ class _ContactWidgetState extends State<ContactWidget> {
     return Container(
       width: 40,
       height: 40,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+      decoration: const BoxDecoration(
+          shape: BoxShape.circle, color: CupertinoColors.lightBackgroundGray),
       child: const Icon(CupertinoIcons.person_fill),
     );
   }

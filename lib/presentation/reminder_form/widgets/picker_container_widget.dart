@@ -14,6 +14,7 @@ class PickerContainerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 52,
       padding: padding,
       decoration: BoxDecoration(
           color: CupertinoColors.lightBackgroundGray,
